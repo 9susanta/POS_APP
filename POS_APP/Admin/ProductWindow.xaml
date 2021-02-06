@@ -1,0 +1,130 @@
+﻿<mah:MetroWindow x:Class="POS_APP.Admin.ProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+         xmlns:rowcon="clr-namespace:POS_APP.Helper" 
+         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:local="clr-namespace:POS_APP.Admin"
+        mc:Ignorable="d"
+        Title="Product" Height="450" Width="800" WindowState="Maximized" Loaded="MetroWindow_Loaded">
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands Style="{StaticResource MahApps.Styles.Control.WindowCommands}">
+            <Menu Name="mymenu" VerticalAlignment="Top" Margin="0,-8,0,0">
+                <MenuItem Name="mnPos" Header="POS" FontSize="13" VerticalAlignment="Top" Icon="{iconPacks:FontAwesome Kind=DesktopSolid}" Click="mnPos_Click">
+               </MenuItem>
+                <MenuItem Name="mnCategory" Header="Add Category" Icon="{iconPacks:FontAwesome Kind=ListAltRegular}" Click="mnCategory_Click" />
+            </Menu>
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+    <Grid x:Name="mainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="DeepPink" Text="Item Management" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+
+        <materialDesign:Card Padding="20" Margin="16" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Add Item" FontSize="16" FontWeight="Bold" Margin="0,0,0,2"></TextBlock>
+                <Separator BorderThickness="0.1"></Separator>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                      <TextBlock Grid.Row="0" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Code :"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0"></TextBlock>
+                      <TextBox Grid.Row="0" Grid.Column="1" IsEnabled="False" Background="LightGray" IsReadOnly="True" Name="txtCode" Height="40" Width="70" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="0,10,0,0"></TextBox>
+
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Category(*) :" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0"></TextBlock>
+                    <ComboBox Grid.Row="1" Grid.Column="1" Name="cmbCategoryName" Style="{StaticResource MahApps.Styles.ComboBox}" IsEditable="True" HorizontalAlignment="Left" IsReadOnly="True" Text="--Select a Category--" Height="40" Width="200" Margin="0,10,0,0"></ComboBox>
+
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Item Name(*) :" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+                    <TextBox Grid.Row="2" Grid.Column="1" Name="txtName" Style="{StaticResource MahApps.Styles.TextBox}" VerticalContentAlignment="Center" mah:TextBoxHelper.Watermark="Enter Item Name" Height="40" Width="200" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBox>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Price(*) :" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBox Name="txtPrice" Style="{StaticResource MahApps.Styles.TextBox}" PreviewTextInput="txtPrice_PreviewTextInput"  VerticalContentAlignment="Center" mah:TextBoxHelper.Watermark="Enter Price" Height="40" Width="100" Margin="0,0,0,0"></TextBox>
+                        <TextBlock TextAlignment="Center" Text="Rs." VerticalAlignment="Center" Margin="2,0,0,0"></TextBlock>
+                    </StackPanel>
+                    <TextBlock Grid.Row="4" Grid.Column="0" FontWeight="Bold" Text="Tax :" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBox Name="txtTax" Style="{StaticResource MahApps.Styles.TextBox}" PreviewTextInput="txtTax_PreviewTextInput"  VerticalContentAlignment="Center" mah:TextBoxHelper.Watermark="Enter Tax" Height="40" Width="100" Margin="0,0,0,0"></TextBox>
+                        <TextBlock TextAlignment="Center"  Text="%" VerticalAlignment="Center" Margin="2,0,0,0"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0" Orientation = "Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                        <Button Name="btnAdd" Width="130" Height="30" Click="btnAdd_Click" BorderBrush="#40E0D0" Background="#40E0D0">Add</Button>
+                        <Button Name="btnCancel" Width="130" Height="30" Margin="10,0,0,0" BorderBrush="#DE3163"  Background="#DE3163" Click="btnCancel_Click">Cancel</Button>
+                    </StackPanel>
+                </Grid>
+               
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card Padding="10" Margin="16" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="View Item" FontSize="16" FontWeight="Bold" Margin="0,0,0,2"></TextBlock>
+                <Separator BorderThickness="0.1"></Separator>
+                <DataGrid Name="gridCategory" Margin="0,2,0,0" HorizontalAlignment="Center" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserAddRows="False" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        
+                        <DataGridTextColumn CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}" IsReadOnly="True"  Header="# SL No." Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={rowcon:RowToIndexConverter}}" />
+                        <DataGridTextColumn CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}" IsReadOnly="True" Header="Code" Binding="{Binding ProdCode}"></DataGridTextColumn>
+                        <DataGridTextColumn CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}" IsReadOnly="True" Header="Name" Binding="{Binding ProdName}"></DataGridTextColumn>
+                        <DataGridTextColumn CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}" IsReadOnly="True" Header="Category" Binding="{Binding Category.Name}"></DataGridTextColumn>
+                        <DataGridTextColumn CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}" IsReadOnly="True" Header="Price" Binding="{Binding Rates}"></DataGridTextColumn>
+                        <DataGridTextColumn CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}" IsReadOnly="True" Header="Tax" Binding="{Binding Tax}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Edit" CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                            x:Name="btnEdit"
+                            Width="75"
+                            Height="Auto"
+                            Margin="2,4,2,4"
+                            Click="btnEdit_Click" ToolTip="EDIT" Style="{DynamicResource MahApps.Styles.Button.MetroSquare}">
+                                        <iconPacks:PackIconEntypo Kind="Pencil" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Delete" CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                            x:Name="btnDelete"
+                            Width="75"
+                            Height="Auto"
+                            Margin="2,4,2,4"
+                            ToolTip="DELETE" Click="btnDelete_Click" Style="{DynamicResource MahApps.Styles.Button.MetroSquare}">
+                                        <iconPacks:PackIconEntypo Kind="Eraser" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </materialDesign:Card>
+        </Grid>
+</mah:MetroWindow>

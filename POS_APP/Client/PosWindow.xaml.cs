@@ -20,6 +20,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace POS_APP.Client
 {
@@ -29,13 +30,16 @@ namespace POS_APP.Client
     public partial class PosWindow : MetroWindow
     {
         Products _products=null;
-        List<Products> lstProduct = new List<Products>();
+        List<Products> lstProduct;
+
+        int currentPage = 0;
 
         private ObservableCollection<Invoice> ShoppingCart;
         public PosWindow()
         {
             InitializeComponent();
             ShoppingCart = new ObservableCollection<Invoice>();
+            lstProduct = new List<Products>();
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
@@ -88,20 +92,22 @@ namespace POS_APP.Client
         {
             try
             {
-                if (lstProduct.Count == 0)
-                {
-                    DataAccessLayer DAL = new DataAccessLayer();
-                    lstProduct = (List<Products>)DAL.GetProducts().Result;
-
-                }
+               
 
                 if (categoryId == 0)
                 {
-                    listViewItems.ItemsSource = lstProduct;
+                    Task.Factory.StartNew(() =>
+
+                   lstProduct = (List<Products>)new DataAccessLayer().GetProducts().Result
+                   ).ContinueWith(x => BindProducts(currentPage));
                 }
                 else
                 {
-                    listViewItems.ItemsSource = lstProduct.Where(x=>x.Category.Id== categoryId).ToList();
+                    Task.Factory.StartNew(() =>
+
+                     lstProduct = (List<Products>)new DataAccessLayer().GetProducts().Result.Where(x => x.Category.Id == categoryId).ToList()
+                  ).ContinueWith(x => BindProducts(currentPage));
+                    
                 }
             }
             catch (Exception)
@@ -148,11 +154,12 @@ namespace POS_APP.Client
                             ProdCode = _products.ProdCode,
                             ProdName = _products.ProdName,
                             Rates = _products.Rates,
+                            CategoryName=_products.Category.Name,
                             Qty = 1,
                             Total = _products.Rates * 1
                         });
                     }
-                    UpdateSubtotalPrice();
+                    UpdateTotalSale(null, null);
                     //((Button)sender).Background= Brushes.Blue;
                 }
             }
@@ -178,13 +185,24 @@ namespace POS_APP.Client
         {
             try
             {
-                if(txtSeach.Text.Trim()!=""&&txtSeach.Text.Length>1)
+                if(txtSeach.Text.Trim()!=""&&txtSeach.Text.Length>0)
                 {
                     if(lstProduct.Count>0)
                     {
                         List<Products> listProd = lstProduct.
-                            Where(x => x.ProdName.ToUpper().Contains(txtSeach.Text.ToUpper()) || x.ProdCode.ToUpper().Contains(txtSeach.Text.ToUpper())).ToList();
+                            Where(x => x.ProdName.ToUpper().Contains(txtSeach.Text.ToUpper()) || x.ProdCode.ToUpper().Contains(txtSeach.Text.ToUpper()) || x.Category.Name.ToUpper().Contains(txtSeach.Text.ToUpper())).ToList();
                         if(listProd.Count>0)
+                        {
+                            listViewItems.ItemsSource = listProd;
+                        }
+                    }
+                }
+                else
+                {
+                    if (lstProduct.Count > 0)
+                    {
+                        List<Products> listProd = lstProduct;
+                        if (listProd.Count > 0)
                         {
                             listViewItems.ItemsSource = listProd;
                         }
@@ -238,6 +256,7 @@ namespace POS_APP.Client
                         ProdCode = _products.ProdCode,
                         ProdName=_products.ProdName,
                         Rates = _products.Rates,
+                        CategoryName = _products.Category.Name,
                         Qty = qty,
                         Total=_products.Rates*qty
                     });
@@ -248,7 +267,7 @@ namespace POS_APP.Client
         private void UpdateSubtotalPrice()
         {
             UpdateTotalSale(null, null);
-            _products = null;
+           _products = null;
         }
 
         public void BindInvoiceGrid()
@@ -270,6 +289,8 @@ namespace POS_APP.Client
 
         private void CancelBilling()
         {
+            txtCustomerName.Text = "";
+            txtPhone.Text = "";
             ShoppingCart.Clear();
             UpdateSubtotalPrice();
         }
@@ -277,6 +298,105 @@ namespace POS_APP.Client
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             CancelBilling();
+        }
+
+        private void mnSetting_Click(object sender, RoutedEventArgs e)
+        {
+            Settings cat = new Settings();
+            cat.Show();
+            this.Close();
+        }
+
+        private async void btnPrint_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if(txtCustomerName.Text.Trim()=="")
+                {
+                    await this.ShowMessageAsync("POS", "Please Enter Customer Name");
+                    return;
+                }
+                if(ShoppingCart.Count==0)
+                {
+                    await this.ShowMessageAsync("POS", "Please Add Items First");
+                    return;
+                }
+                Customers customers = new Customers();
+                customers.CName = txtCustomerName.Text;
+                customers.CPhone = txtPhone.Text;
+                new DataAccessLayer().SaveCustomer(customers);
+
+                Order ord = new Order();
+                ord.lstInvoice = ShoppingCart.ToList();
+                ord.OrderDate = DateTime.Now.ToString();
+                ord.SubTotal= ShoppingCart.Sum(x => x.Total).ToString("C");
+                ord.Invoice = "FJ0"+(new DataAccessLayer().Invoice()+1);
+                ord.CustomerName = txtCustomerName.Text;
+                Company company = new DataAccessLayer().GetCompany();
+                PrintJob pjob = new PrintJob(ord, company);
+                pjob.Print(company.PrinterName);
+                CancelBilling();
+            }
+            catch (Exception ex)
+            {
+                await this.ShowMessageAsync("POS", ex.Message);
+            }
+            
+        }
+
+        private void BindProducts(int pageNo)
+        {
+            try
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    Paging PagedTbl = new Paging();
+                    PagedTbl.PageIndex = pageNo;
+                    listViewItems.ItemsSource = PagedTbl.SetPaging<Products>(lstProduct, 42);
+
+                }), DispatcherPriority.Background);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private async void Backwards_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage--;
+            if (currentPage < 0)
+            {
+                currentPage = 0;
+                await this.ShowMessageAsync("Item", "No More Records Present !");
+                return;
+            }
+            BindProducts(currentPage);
+        }
+
+        private void First_Click(object sender, RoutedEventArgs e)
+        {
+            BindProducts(0);
+        }
+
+        private void Last_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage = lstProduct.Count / 10;
+            BindProducts(currentPage);
+        }
+
+        private async void Forward_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage++;
+            if (currentPage >= (lstProduct.Count / 10))
+            {
+                currentPage= (lstProduct.Count / 10);
+                await this.ShowMessageAsync("Item", "No More Records Present !");
+                return;
+            }
+            BindProducts(currentPage);
         }
     }
 }

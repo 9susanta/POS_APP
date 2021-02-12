@@ -3,6 +3,7 @@ using MahApps.Metro.Controls.Dialogs;
 using POS_APP.Client;
 using POS_APP.Data.Tables;
 using POS_APP.DataLayer;
+using POS_APP.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,16 +28,28 @@ namespace POS_APP.Admin
     public partial class ProductWindow : MetroWindow
     {
         private int _productId = 0;
+
+        List<Products> listProduct;
+
+        int currentPage = 0;
         public ProductWindow()
         {
             InitializeComponent();
+            listProduct = new List<Products>();
         }
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             BindProducts();
-            BuildItemCode();
             BindCategory();
             
+        }
+
+        private void BindProducts()
+        {
+            Task.Factory.StartNew(() =>
+
+                  listProduct = (List<Products>)new DataAccessLayer().GetProducts().Result
+           ).ContinueWith(x => BindProducts(currentPage));
         }
 
         private async void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -52,8 +65,8 @@ namespace POS_APP.Admin
                     {
                         await this.ShowMessageAsync("Product", "Product Deleted Sucessfully !");
 
-                        BindProducts();
-                        BuildItemCode();
+                        //BindProducts();
+                       // BuildItemCode();
 
                     }
                     else
@@ -117,7 +130,7 @@ namespace POS_APP.Admin
                     DataAccessLayer DAL = new DataAccessLayer();
                     Category lvCat = DAL.GetOneCategory(((Category)cmbCategoryName.SelectedItem).Id).Result;
                     Products products = new Products();
-                    products.ProdCode = txtCode.Text;
+                    products.ProdCode = txtCode.Text.ToUpper();
                     products.ProdName = txtName.Text.ToUpper();
                     products.CategoryId = lvCat.Id;
                     products.Rates = decimal.Parse(txtPrice.Text);
@@ -128,7 +141,7 @@ namespace POS_APP.Admin
                     {
                         ClearScreen();
                         await this.ShowMessageAsync("Item", "Item Added Sucessfully !");
-                        BuildItemCode();
+                       // BuildItemCode();
                         BindProducts();
                     }
                     else if (i == 0)
@@ -156,7 +169,7 @@ namespace POS_APP.Admin
                     {
                         ClearScreen();
                         await this.ShowMessageAsync("Item", "Item Updated Sucessfully !");
-                        BuildItemCode();
+                        //BuildItemCode();
                         BindProducts();
                     }
                     else if (i == 0)
@@ -187,7 +200,7 @@ namespace POS_APP.Admin
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             ClearScreen();
-            BuildItemCode();
+            //BuildItemCode();
 
         }
         private void BindCategory()
@@ -240,18 +253,17 @@ namespace POS_APP.Admin
             }
         }
 
-        private void BindProducts()
+        private void BindProducts(int pageNo)
         {
             try
             {
-                Task.Factory.StartNew(() =>
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    List<Products> listProduct = (List<Products>)new DataAccessLayer().GetProducts().Result;
-                    gridCategory.ItemsSource = listProduct;
+                    Paging PagedTbl = new Paging();
+                    PagedTbl.PageIndex = pageNo;
+                    gridCategory.ItemsSource = PagedTbl.SetPaging<Products>(listProduct,10);
 
-                }), DispatcherPriority.Background)
-                );
+                }), DispatcherPriority.Background);
 
             }
             catch (Exception)
@@ -280,9 +292,6 @@ namespace POS_APP.Admin
             else
                 e.Handled = true;
         }
-
-        
-
         private void mnPos_Click(object sender, RoutedEventArgs e)
         {
             PosWindow pos = new PosWindow();
@@ -295,6 +304,44 @@ namespace POS_APP.Admin
             CategoryScreen cat = new CategoryScreen();
             cat.Show();
             this.Close();
+        }
+
+        private void mnSetting_Click(object sender, RoutedEventArgs e)
+        {
+            Settings cat = new Settings();
+            cat.Show();
+            this.Close();
+        }
+
+        private async void Backwards_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage--;
+            if (currentPage < 0)
+            {
+                await this.ShowMessageAsync("Item", "No More Records Present !");
+            }
+            BindProducts(currentPage);
+        }
+
+        private void First_Click(object sender, RoutedEventArgs e)
+        {
+            BindProducts(0);
+        }
+
+        private void Last_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage = listProduct.Count / 10;
+            BindProducts(currentPage);
+        }
+
+        private async void Forward_Click(object sender, RoutedEventArgs e)
+        {
+            currentPage++;
+            if(currentPage> (listProduct.Count / 10))
+            {
+                await this.ShowMessageAsync("Item", "No More Records Present !");
+            }
+            BindProducts(currentPage);
         }
     }
 }

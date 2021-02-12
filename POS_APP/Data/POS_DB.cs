@@ -16,5 +16,6 @@ namespace POS_APP.Data
         public DbSet<Products> Products { get; set; }
         public DbSet<Customers> Customers { get; set; }
         public DbSet<SellRecords> SellRecords { get; set; }
+        public DbSet<Company> Companies { get; set; }
     }
 }

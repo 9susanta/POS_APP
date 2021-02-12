@@ -112,6 +112,7 @@ namespace POS_APP.Admin
         {
             try
             {
+                
                 Category obj = ((FrameworkElement)sender).DataContext as Category;
                 if (obj != null)
                 {
@@ -126,7 +127,7 @@ namespace POS_APP.Admin
             }
             catch (Exception ex)
             {
-
+                await this.ShowMessageAsync("", ex.Message);
             }
         }
 
@@ -167,6 +168,13 @@ namespace POS_APP.Admin
         private void mnProduct_Click(object sender, RoutedEventArgs e)
         {
             ProductWindow cat = new ProductWindow();
+            cat.Show();
+            this.Close();
+        }
+
+        private void mnSetting_Click(object sender, RoutedEventArgs e)
+        {
+            Settings cat = new Settings();
             cat.Show();
             this.Close();
         }

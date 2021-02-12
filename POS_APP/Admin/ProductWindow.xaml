@@ -17,6 +17,7 @@
                 <MenuItem Name="mnPos" Header="POS" FontSize="13" VerticalAlignment="Top" Icon="{iconPacks:FontAwesome Kind=DesktopSolid}" Click="mnPos_Click">
                </MenuItem>
                 <MenuItem Name="mnCategory" Header="Add Category" Icon="{iconPacks:FontAwesome Kind=ListAltRegular}" Click="mnCategory_Click" />
+                <MenuItem Name="mnSetting" Header="Settings" Icon="{iconPacks:FontAwesome Kind=CogSolid}" Click="mnSetting_Click"/>
             </Menu>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
@@ -50,14 +51,12 @@
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
-                    
-                      <TextBlock Grid.Row="0" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Code :"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0"></TextBlock>
-                      <TextBox Grid.Row="0" Grid.Column="1" IsEnabled="False" Background="LightGray" IsReadOnly="True" Name="txtCode" Height="40" Width="70" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="0,10,0,0"></TextBox>
 
+                    <TextBlock Grid.Row="0" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Code :"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0"></TextBlock>
+                    <TextBox Grid.Row="0" Grid.Column="1" Name="txtCode" Style="{StaticResource MahApps.Styles.TextBox}" Height="40" Width="70" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="0,10,0,0"></TextBox>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Category(*) :" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0"></TextBlock>
                     <ComboBox Grid.Row="1" Grid.Column="1" Name="cmbCategoryName" Style="{StaticResource MahApps.Styles.ComboBox}" IsEditable="True" HorizontalAlignment="Left" IsReadOnly="True" Text="--Select a Category--" Height="40" Width="200" Margin="0,10,0,0"></ComboBox>
-
 
                     <TextBlock Grid.Row="2" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Item Name(*) :" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
                     <TextBox Grid.Row="2" Grid.Column="1" Name="txtName" Style="{StaticResource MahApps.Styles.TextBox}" VerticalContentAlignment="Center" mah:TextBoxHelper.Watermark="Enter Item Name" Height="40" Width="200" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBox>
@@ -78,16 +77,14 @@
                         <Button Name="btnCancel" Width="130" Height="30" Margin="10,0,0,0" BorderBrush="#DE3163"  Background="#DE3163" Click="btnCancel_Click">Cancel</Button>
                     </StackPanel>
                 </Grid>
-               
             </StackPanel>
         </materialDesign:Card>
         <materialDesign:Card Padding="10" Margin="16" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="View Item" FontSize="16" FontWeight="Bold" Margin="0,0,0,2"></TextBlock>
                 <Separator BorderThickness="0.1"></Separator>
-                <DataGrid Name="gridCategory" Margin="0,2,0,0" HorizontalAlignment="Center" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserAddRows="False" AutoGenerateColumns="False">
+                <DataGrid Name="gridCategory" Margin="0,2,0,0" MaxHeight="440" HorizontalAlignment="Center" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserAddRows="False" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        
                         <DataGridTextColumn CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}" IsReadOnly="True"  Header="# SL No." Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={rowcon:RowToIndexConverter}}" />
                         <DataGridTextColumn CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}" IsReadOnly="True" Header="Code" Binding="{Binding ProdCode}"></DataGridTextColumn>
                         <DataGridTextColumn CellStyle="{StaticResource MahApps.Styles.DataGridCell}" HeaderStyle="{StaticResource MahApps.Styles.DataGridColumnHeader}" IsReadOnly="True" Header="Name" Binding="{Binding ProdName}"></DataGridTextColumn>
@@ -124,6 +121,30 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+                <StackPanel Orientation='Horizontal'
+                        Margin='6'
+                        HorizontalAlignment='Center'>
+                    <Button x:Name="Backwards"
+                        Padding="4"
+                        Content="&lt; Previous"
+                        Margin="6"
+                        Click="Backwards_Click"></Button>
+                    <Button x:Name="First"
+                        Padding="4"
+                        Content="&lt;&lt; Jump to First"
+                        Margin="6"
+                        Click="First_Click"></Button>
+                    <Button x:Name="Last"
+                        Padding="4"
+                        Content="&gt;&gt; Jump to Last"
+                        Margin="6"
+                        Click="Last_Click"></Button>
+                    <Button x:Name="Forward"
+                        Padding="4"
+                        Content="Next &gt;"
+                        Margin="6"
+                        Click="Forward_Click"></Button>
+                </StackPanel>
             </StackPanel>
         </materialDesign:Card>
         </Grid>

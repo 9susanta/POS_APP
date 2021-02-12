@@ -13,6 +13,7 @@ namespace POS_APP.Data.Tables
         public int Id { get; set; }
         public string CName { get; set; }
         public string CPhone { get; set; }
+        public DateTime PurchaseDate { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

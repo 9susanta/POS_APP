@@ -1,0 +1,97 @@
+﻿<mah:MetroWindow x:Class="POS_APP.Admin.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:POS_APP.Admin"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="Settings" WindowState="Maximized" Loaded="MetroWindow_Loaded" Height="450" Width="800">
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands Style="{StaticResource MahApps.Styles.Control.WindowCommands}">
+            <Menu Name="mymenu" VerticalAlignment="Top" Margin="0,-8,0,0">
+                <MenuItem Name="mnPos" Header="POS" FontSize="13" VerticalAlignment="Top" Icon="{iconPacks:FontAwesome Kind=DesktopSolid}" Click="mnPos_Click">
+                </MenuItem>
+                <MenuItem Name="mnProduct" Header="Add Item" Icon="{iconPacks:FontAwesome Kind=ProductHuntBrands}" Click="mnProduct_Click"/>
+                <MenuItem Name="mnCategory" Header="Add Category" Icon="{iconPacks:FontAwesome Kind=ListAltRegular}" Click="mnCategory_Click" />
+            </Menu>
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <materialDesign:Card Padding="30" Margin="16" Grid.Column="0" Grid.Row="0">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Update Address" FontSize="16" FontWeight="Bold" Margin="0,0,0,2"></TextBlock>
+                <Separator BorderThickness="0.1"></Separator>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Shop Name(*) :"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0"></TextBlock>
+                    <TextBox Grid.Row="0" Grid.Column="1" Name="txtShopName" Style="{StaticResource MahApps.Styles.TextBox}" Height="40" mah:TextBoxHelper.Watermark="Enter Shop Name" Width="200" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="0,10,0,0"></TextBox>
+                    
+                    <TextBlock Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Contact No (*) :" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+                    <TextBox Grid.Row="1" Grid.Column="1" Name="txtContact" Style="{StaticResource MahApps.Styles.TextBox}" VerticalContentAlignment="Center" MaxLength="12" mah:TextBoxHelper.Watermark="Enter Contact No." Height="40" Width="200" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBox>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Address(*) :" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+                    <TextBox TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Grid.Row="2" Grid.Column="1" Name="txtAddress" Style="{StaticResource MahApps.Styles.TextBox}" VerticalContentAlignment="Top" mah:TextBoxHelper.Watermark="Enter Addess" Height="80" Width="200" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"></TextBox>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Logo(*) :" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"></TextBlock>
+                    <StackPanel Grid.Row="3" Grid.Column="1" Margin="0,10,0,10" Orientation="Horizontal">
+                        <Button Height="35" Click="btnLoad_Click" Background="LightGray" BorderThickness="0" Padding="0" Name="btnLoad" VerticalAlignment="Center" Width="100" Command="{Binding ImgUploadCommand}">_Browse</Button>
+                        <Border Margin="20,0,0,0">
+                            <Image Height="70px" Width="70px" Name="logoImg" />
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,20,0,0" Orientation = "Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Button Name="btnUpdCompany" Width="130" Height="30" Click="btnUpdCompany_Click" BorderBrush="#40E0D0" Background="#40E0D0">Update Shop</Button>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card Name="SettPrinter" Padding="30" Margin="16" Grid.Column="1" Grid.Row="0">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Printer Setting" FontSize="16" FontWeight="Bold" Margin="0,0,0,2"></TextBlock>
+                <Separator BorderThickness="0.1"></Separator>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" TextAlignment="Center" FontWeight="Bold" Text="Shop Name(*) :"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,0,0"></TextBlock>
+                    <ComboBox Grid.Row="0" Grid.Column="1" Name="cmbPrinter" Style="{StaticResource MahApps.Styles.ComboBox}" Height="40" Width="200" HorizontalAlignment="Left" VerticalContentAlignment="Center" Margin="0,10,0,0"></ComboBox>
+
+                    <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,20,0,0" Orientation = "Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Button Name="btnPrinterUdt" Width="130" Height="30" Click="btnPrinterUdt_Click" BorderBrush="#40E0D0" Background="#40E0D0">Set Printer</Button>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</mah:MetroWindow>

@@ -34,7 +34,7 @@ namespace POS_APP.DataLayer
             }
             catch (Exception ex)
             {
-                return -1;
+                throw ex;
             }
         }
         public int UpdateCategory(Category category)
@@ -53,7 +53,7 @@ namespace POS_APP.DataLayer
             }
             catch (Exception ex)
             {
-                return -1;
+                throw ex;
             }
         }
         public int DeleteCategory(Category category)
@@ -71,7 +71,7 @@ namespace POS_APP.DataLayer
             }
             catch (Exception ex)
             {
-                return -1;
+                throw ex;
             }
         }
         public async Task<IEnumerable<Category>> GetCategories()
@@ -87,33 +87,24 @@ namespace POS_APP.DataLayer
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
         public async Task<Category> GetOneCategory(int categoryId)
         {
-            try
-            {
-                try
-                {
+             try
+             {
                     using (var context = new POS_DB())
                     {
                         var lastcat = context.Category.Where(x => x.Id == categoryId).FirstOrDefault();
 
                         return await Task.FromResult(lastcat);
                     }
-                }
-                catch (Exception ex)
-                {
-                    return null;
-                }
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+             }
+             catch (Exception ex)
+             {
+                throw ex;
+             }
         }
         public async Task<Products> GetLastProductData()
         {
@@ -129,7 +120,7 @@ namespace POS_APP.DataLayer
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
 
@@ -154,9 +145,9 @@ namespace POS_APP.DataLayer
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return -1;
+                throw ex;
             }
         }
 
@@ -166,14 +157,14 @@ namespace POS_APP.DataLayer
             {
                 using (var context = new POS_DB())
                 {
-                    var Listcat = context.Products.Include(x=>x.Category).Where(x => x.IsDeleted == false).ToList();
+                    var Listcat = context.Products.Include(x=>x.Category).Where(x => x.IsDeleted == false).OrderByDescending(x=>x.ProductsId).ToListAsync();
 
-                    return await Task.FromResult(Listcat);
+                    return await Listcat;
                 }
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
 
@@ -190,7 +181,7 @@ namespace POS_APP.DataLayer
             }
             catch (Exception ex)
             {
-                return -1;
+                throw ex;
             }
         }
 
@@ -198,25 +189,17 @@ namespace POS_APP.DataLayer
         {
             try
             {
-                try
-                {
-                    using (var context = new POS_DB())
-                    {
-                        var lastcat = context.Products.Where(x => x.ProductsId == productId).FirstOrDefault();
+               using (var context = new POS_DB())
+               {
+                    var lastcat = context.Products.Where(x => x.ProductsId == productId).FirstOrDefault();
 
-                        return await Task.FromResult(lastcat);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return null;
-                }
-
+                    return await Task.FromResult(lastcat);
+               }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
         }
 
@@ -238,7 +221,7 @@ namespace POS_APP.DataLayer
             }
             catch (Exception ex)
             {
-                return -1;
+                throw ex;
             }
         }
 
@@ -264,7 +247,118 @@ namespace POS_APP.DataLayer
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
+            }
+        }
+
+        public int UpdateCompanies(Company _company)
+        {
+            try
+            {
+                using (var context = new POS_DB())
+                {
+                    var company = context.Companies.FirstOrDefault();
+
+                    if (company == null)
+                    {
+                        company = _company;
+                        context.Companies.Add(company);
+                    }
+                    else
+                    {
+                        company.ShopName = _company.ShopName;
+                        company.ShopAddress = _company.ShopAddress;
+                        company.ImageUrl = _company.ImageUrl;
+                        company.ContactNo = _company.ContactNo;
+                        context.Companies.Attach(company);
+                        context.Entry(company).State = EntityState.Modified;
+                    }
+
+                    return context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public int UpdatePrinter(Company _company)
+        {
+            try
+            {
+                using (var context = new POS_DB())
+                {
+                    var company = context.Companies.FirstOrDefault();
+
+                    if (company != null)
+                    {
+                        company.PrinterName = _company.PrinterName;
+                        context.Companies.Attach(company);
+                        context.Entry(company).State = EntityState.Modified;
+                    }
+
+                    return context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public Company GetCompany()
+        {
+            try
+            {
+                using (var context = new POS_DB())
+                {
+                    return context.Companies.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public int SaveCustomer(Customers customers)
+        {
+            try
+            {
+                using (var context = new POS_DB())
+                {
+                    Customers cust = new Customers();
+                    cust.CName = customers.CName;
+                    cust.CPhone = customers.CPhone;
+                    cust.PurchaseDate = DateTime.Now;
+                    context.Customers.Add(cust);
+
+                    return context.SaveChanges();
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public int Invoice()
+        {
+            try
+            {
+                using (var context = new POS_DB())
+                {
+
+                    var count = context.Customers.OrderByDescending(x => x.Id).ToList().Count;
+                    return count;
+                }
+            }
+            catch (Exception ex)
+            {
+                return 0;
             }
         }
     }

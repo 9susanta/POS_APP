@@ -16,6 +16,7 @@ namespace POS_APP.Helper
         public int ProductsId { get; set; }
         public string ProdCode { get; set; }
         public string ProdName { get; set; }
+        public string CategoryName { get; set; }
         public decimal Rates { get; set; }
         public decimal Tax { get; set; }
 

@@ -9,9 +9,11 @@ namespace POS_APP.Data.Tables
 {
     public class SellRecords
     {
-       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SellRecordsId { get; set; }
         public string InvoiceNo { get; set; }
         public decimal Amount { get; set; }
+        public DateTime PurchaseDate { get; set; }
+        public ICollection<InvoiceProduct> InvoiceProduct { get; set; }
     }
 }

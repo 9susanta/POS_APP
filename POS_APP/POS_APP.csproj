@@ -51,6 +51,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=51482d6f650b2b3f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.2.3.2\lib\net452\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -209,6 +212,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Client\DashbordScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Client\PosWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -230,6 +237,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Client\DashbordScreen.xaml.cs">
+      <DependentUpon>DashbordScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Client\PosWindow.xaml.cs">
       <DependentUpon>PosWindow.xaml</DependentUpon>
     </Compile>
@@ -238,6 +248,7 @@
     <Compile Include="Data\Tables\Category.cs" />
     <Compile Include="Data\Tables\Company.cs" />
     <Compile Include="Data\Tables\Customers.cs" />
+    <Compile Include="Data\Tables\InvoiceProduct.cs" />
     <Compile Include="Data\Tables\Products.cs" />
     <Compile Include="Data\Tables\SellRecords.cs" />
     <Compile Include="Helper\BuildQty.cs" />
@@ -278,6 +289,10 @@
     <Compile Include="Migrations\202102100708589_UpdateCust.designer.cs">
       <DependentUpon>202102100708589_UpdateCust.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102131104201_InvoiceProduct.cs" />
+    <Compile Include="Migrations\202102131104201_InvoiceProduct.designer.cs">
+      <DependentUpon>202102131104201_InvoiceProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -309,6 +324,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102100708589_UpdateCust.resx">
       <DependentUpon>202102100708589_UpdateCust.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102131104201_InvoiceProduct.resx">
+      <DependentUpon>202102131104201_InvoiceProduct.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -56,22 +56,34 @@ namespace POS_APP.Admin
         {
             try
             {
-                Products obj = ((FrameworkElement)sender).DataContext as Products;
-                if (obj != null)
+                var settings = new MetroDialogSettings()
                 {
-                    DataAccessLayer DAL = new DataAccessLayer();
-                    int i=DAL.RemoveProduct(obj.ProductsId);
-                    if(i>0)
-                    {
-                        await this.ShowMessageAsync("Product", "Product Deleted Sucessfully !");
+                    AffirmativeButtonText = "Yes",
+                    NegativeButtonText = "Cancel",
+                    AnimateShow = true,
+                    AnimateHide = false
+                };
+                var result = await this.ShowMessageAsync("Confirmation", "Are you sure to Delete?", MessageDialogStyle.AffirmativeAndNegative, settings);
 
-                        //BindProducts();
-                       // BuildItemCode();
-
-                    }
-                    else
+                if (result == MessageDialogResult.Affirmative)
+                {
+                    Products obj = ((FrameworkElement)sender).DataContext as Products;
+                    if (obj != null)
                     {
-                        await this.ShowMessageAsync("Product", "Some Thing Went Wrong !");
+                        DataAccessLayer DAL = new DataAccessLayer();
+                        int i = DAL.RemoveProduct(obj.ProductsId);
+                        if (i > 0)
+                        {
+                            await this.ShowMessageAsync("Product", "Product Deleted Sucessfully !");
+
+                            //BindProducts();
+                            // BuildItemCode();
+
+                        }
+                        else
+                        {
+                            await this.ShowMessageAsync("Product", "Some Thing Went Wrong !");
+                        }
                     }
                 }
             }

@@ -112,17 +112,28 @@ namespace POS_APP.Admin
         {
             try
             {
-                
-                Category obj = ((FrameworkElement)sender).DataContext as Category;
-                if (obj != null)
+                var settings = new MetroDialogSettings()
                 {
-                    obj.IsDeleted = true;
-                    DataAccessLayer dataLayer = new DataAccessLayer();
-                    dataLayer.DeleteCategory(obj);
-                    await this.ShowMessageAsync("Category", "Category Deleted Sucessfully !");
-                    LoadGrid();
-                    ClearScreen();
+                    AffirmativeButtonText = "Yes",
+                    NegativeButtonText = "Cancel",
+                    AnimateShow = true,
+                    AnimateHide = false
+                };
+                var result = await this.ShowMessageAsync("Confirmation", "Are you sure to Delete?", MessageDialogStyle.AffirmativeAndNegative, settings);
 
+                if (result == MessageDialogResult.Affirmative)
+                {
+                    Category obj = ((FrameworkElement)sender).DataContext as Category;
+                    if (obj != null)
+                    {
+                        obj.IsDeleted = true;
+                        DataAccessLayer dataLayer = new DataAccessLayer();
+                        dataLayer.DeleteCategory(obj);
+                        await this.ShowMessageAsync("Category", "Category Deleted Sucessfully !");
+                        LoadGrid();
+                        ClearScreen();
+
+                    }
                 }
             }
             catch (Exception ex)
